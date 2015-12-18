@@ -1,9 +1,11 @@
 var position = 0;
 var dir = 1;
-// var hscore = 0;
 var numofclicks = 0;
+var highscore = 0
 var lives= 3;
 var skip = true;
+
+//Start Rotation
 
 var rotate = function() {
 	//console.log(dir, Math.abs(position % 360));
@@ -20,13 +22,24 @@ var rotate = function() {
 	// }
 };
 
+
+$('#hscore').text(highscore)
+
+
+//Lives
+
 var takelife = function() {
 	lives = (lives - 1);
 	$('#lives').text(lives);
 	if (lives <1) {
 		window.location.replace("index2.html");
+		  if (numofclicks > localStorage.getItem("highscore")) {
+                localStorage.setItem("highscore", numofclicks);
+            };
 	}
 }
+
+//Rotation
 
 var rot;
 var top;
@@ -53,11 +66,13 @@ timer = setInterval(rotate, 12);
 $('#lives').text(lives);
 $('#count').text(numofclicks);
 
-// $('.lives span').text(marqueeWidth);
 
+//In Target/ Out Target
 
 	$('body').on('keydown', function(e){
 		console.log(e.keyCode)
+
+		$('.inst').hide()
 
 		document.getElementById('radar').load();
 		document.getElementById('radar').play();
@@ -69,7 +84,6 @@ $('#count').text(numofclicks);
 				dir *= -1;
 
 				skip = true;
-				// $('.target').css({'transform':'rotateZ(180deg)'});
 
 
 				numofclicks = (numofclicks + 1);
@@ -80,9 +94,6 @@ $('#count').text(numofclicks);
 
 			else {
 				console.log(Math.abs(position % 360), "NO")
-				// dir = 0;
-
-				// $('.middle-circle').addClass('red');
 
 				$(".middle-circle").addClass("red").delay(200).queue(function(next){
 				    $(this).removeClass("red");
@@ -93,6 +104,8 @@ $('#count').text(numofclicks);
 				takelife()
 			}
 
+
+//Speed Up, intervals of 5 up until 20, otherwise too fast
 
 	if ( numofclicks == 5 ) {
 		clearInterval(timer);
@@ -107,6 +120,11 @@ $('#count').text(numofclicks);
 	if  ( numofclicks == 15 ) {
 		clearInterval(timer);
 		timer = setInterval(rotate, 6);
+	}
+
+	if  ( numofclicks == 20 ) {
+		clearInterval(timer);
+		timer = setInterval(rotate, 5);
 	}
 
 
