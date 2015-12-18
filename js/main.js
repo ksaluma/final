@@ -12,12 +12,12 @@ var rotate = function() {
 	if (((dir == 1 && Math.abs(position % 360) == 6) && skip) || ((dir == -1 && Math.abs(position % 360) == 356) && skip)) {
 		skip = false;
 	}
-	else if (dir == 1 && Math.abs(position % 360) == 6 && !skip) {
-		takelife();
-	}
-	else if (dir == -1 && Math.abs(position % 360) == 356 && !skip) {
-		takelife();
-	}
+	// else if (dir == 1 && Math.abs(position % 360) == 6 && !skip) {
+	// 	takelife();
+	// }
+	// else if (dir == -1 && Math.abs(position % 360) == 356 && !skip) {
+	// 	takelife();
+	// }
 };
 
 var takelife = function() {
@@ -42,6 +42,7 @@ var setposition = function() {
 	$('.target').css('transform','rotate('+rot+'deg)');
 
 };
+
 setposition();
 
 
@@ -91,6 +92,23 @@ $('#count').text(numofclicks);
 
 				takelife()
 			}
+
+
+	if ( numofclicks == 5 ) {
+		clearInterval(timer);
+		timer = setInterval(rotate, 8);
+	}
+
+	if ( numofclicks == 10 ) {
+		clearInterval(timer);
+		timer = setInterval(rotate, 7);
+	}
+
+	if  ( numofclicks == 15 ) {
+		clearInterval(timer);
+		timer = setInterval(rotate, 6);
+	}
+
 
 			
 			
