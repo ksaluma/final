@@ -5,6 +5,10 @@ var highscore = 0
 var lives= 3;
 var skip = true;
 
+var rot; // Where the dial is
+var thetop;
+var bottom;
+
 //Start Rotation
 
 var rotate = function() {
@@ -23,7 +27,6 @@ var rotate = function() {
 };
 
 
-$('#hscore').text(highscore)
 
 
 //Lives
@@ -41,96 +44,106 @@ var takelife = function() {
 
 //Rotation
 
-var rot;
-var top;
-var bottom;
 var setposition = function() {
 	rot = Math.ceil(Math.random() * 360);
 	
-	top = rot - 4;
-	if (top < 0) top = top + 360;
+	thetop = rot - 4;
+	if (thetop < 0) thetop = thetop + 360;
 	
 	bottom = (rot + 5) % 360;
 
+	console.log(rot, thetop, bottom);
+
 	$('.target').css('transform','rotate('+rot+'deg)');
-
 };
-
-setposition();
-
-
-timer = setInterval(rotate, 12);
-
-
-
-$('#lives').text(lives);
-$('#count').text(numofclicks);
 
 
 //In Target/ Out Target
 
-	$('body').on('keydown', function(e){
-		console.log(e.keyCode)
+$('body').on('keydown', function(e){
+	console.log(e.keyCode)
 
-		$('.inst').hide()
+	$('.inst').hide()
 
-		document.getElementById('radar').load();
-		document.getElementById('radar').play();
+	document.getElementById('radar').load();
+	document.getElementById('radar').play();
 
+	if(e.keyCode == 32){
+		console.log('between:', thetop, 'and', bottom, '?', Math.abs(position % 360));
+		if (Math.abs(position % 360) >= thetop && Math.abs(position % 360) <= bottom) {
+			console.log(Math.abs(position % 360), "YES")
+			dir *= -1;
+			$('.target').css({'transform':'scaleX('+dir+')'});
 
-		if(e.keyCode == 32){
-			if (Math.abs(position % 360) >= top || Math.abs(position % 360) <= bottom) {
-				console.log(Math.abs(position % 360), "YES")
-				dir *= -1;
-
-				skip = true;
-
-
-				numofclicks = (numofclicks + 1);
-				$('#count').text(numofclicks);
-
-				setposition();
-			}
-
-			else {
-				console.log(Math.abs(position % 360), "NO")
-
-				$(".middle-circle").addClass("red").delay(200).queue(function(next){
-				    $(this).removeClass("red");
-				    next();
-				});
+			skip = true;
 
 
-				takelife()
-			}
+			numofclicks = (numofclicks + 1);
+			$('#count').text(numofclicks);
 
+			setposition();
+		}
 
-//Speed Up, intervals of 5 up until 20, otherwise too fast
+		else {
+			console.log(Math.abs(position % 360), "NO")
 
-	if ( numofclicks == 5 ) {
-		clearInterval(timer);
-		timer = setInterval(rotate, 8);
-	}
+			$(".middle-circle").addClass("red").delay(200).queue(function(next){
+			    $(this).removeClass("red");
+			    next();
+			});
 
-	if ( numofclicks == 10 ) {
-		clearInterval(timer);
-		timer = setInterval(rotate, 7);
-	}
+			takelife()
+		}
 
-	if  ( numofclicks == 15 ) {
-		clearInterval(timer);
-		timer = setInterval(rotate, 6);
-	}
+		//Speed Up, intervals of 5 up until 20, otherwise too fast
 
-	if  ( numofclicks == 20 ) {
-		clearInterval(timer);
-		timer = setInterval(rotate, 5);
-	}
-
-
-			
+		if ( numofclicks == 5 ) {
+			clearInterval(timer);
+			timer = setInterval(rotate, 8);
+		}
+		if ( numofclicks == 10 ) {
+			clearInterval(timer);
+			timer = setInterval(rotate, 7);
+		}
+		if  ( numofclicks == 15 ) {
+			clearInterval(timer);
+			timer = setInterval(rotate, 6);
+		}
+		if  ( numofclicks == 20 ) {
+			clearInterval(timer);
+			timer = setInterval(rotate, 5);
+		}
 			
 	};
+});
+
+
+
+
+
+$(function() {
+
+	$('#hscore').text(highscore);
+
+	setposition();
+
+	timer = setInterval(rotate, 12);
+
+	$('#lives').text(lives);
+	$('#count').text(numofclicks);
+
+});
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -152,8 +165,3 @@ $('#count').text(numofclicks);
  //    $('.score span.hscore').text(localStorage.getItem('score') ? localStorage.getItem('score') : 0);
  //    $('.score span.count').text(0);
  //  }
-
-
-
-	});
-
